@@ -23,6 +23,9 @@ const regionSchema = new Schema({
     trim: true,
   },
 },
-{timestamps: true});
+  {
+    timestamps: true,
+  versionKey: false,
+});
 
 export const Region = model('Region', regionSchema);
