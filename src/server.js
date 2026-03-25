@@ -11,7 +11,7 @@ import { errors } from 'celebrate';
 
 const app = express();
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = getEnvVar(ENV_VARS.PORT) ?? 3000;
 
 app.use(logger);
 
