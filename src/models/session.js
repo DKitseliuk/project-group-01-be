@@ -10,7 +10,10 @@ const sessionSchema = new Schema(
     accessTokenValidUntil: { type: Date, required: true },
     refreshTokenValidUntil: { type: Date, required: true },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    versionKey: false,
+   },
 );
 
 export const Session = model('Session', sessionSchema);
