@@ -1,7 +1,34 @@
 import express from 'express';
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
 import { connectMongoDB } from './db/connectMongoDB.js';
+import { logger } from "./middlewares/logger.js";
+import { notFoundHandler } from "./middlewares/notFoundHandler.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
+import { errors } from 'celebrate';
+
 
 const app = express();
+
+const PORT = getEnvVar(ENV_VARS.PORT) ?? 3000;
+
+app.use(logger);
+
+
+app.use(express.json());
+
+app.use(cors());
+
+app.use(cookieParser());
+
+
+
+app.use(notFoundHandler);
+
+app.use(errors());
+
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'OK' });
