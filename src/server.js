@@ -1,7 +1,14 @@
 import express from 'express';
 import { connectMongoDB } from './db/connectMongoDB.js';
+import cookieParser from 'cookie-parser';
+
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
+
+app.use(cookieParser());
+
+app.use(authRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'OK' });
