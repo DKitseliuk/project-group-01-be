@@ -4,16 +4,16 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import bcrypt from 'bcrypt';
 
-import { createSession } from '../services/auth.js';
+import { createSession } from '../services/authService.js';
 import { Session } from '../models/session.js';
-import { setSessionCookies } from '../services/auth.js';
+import { setSessionCookies } from '../services/authService.js';
 
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw createHttpError(400, 'Email in use');
+    throw createHttpError(409, 'Email in use');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
 
   setSessionCookies(res, newSession);
 
-  res.status(201).json(newUser);
+  res.status(201).json({ newUser });
 };
 
 export const loginUser = async (req, res) => {
@@ -50,7 +50,7 @@ export const loginUser = async (req, res) => {
 
   setSessionCookies(res, newSession);
 
-  res.status(200).json(user);
+  res.status(200).json({ user });
 };
 
 export const logoutUser = async (req, res) => {

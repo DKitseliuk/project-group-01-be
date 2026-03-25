@@ -1,4 +1,4 @@
-// src/services/auth.js
+// src/services/authService.js
 
 import crypto from 'crypto';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
