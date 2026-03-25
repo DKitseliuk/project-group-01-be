@@ -3,11 +3,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import { connectMongoDB } from './db/connectMongoDB.js';
-import { logger } from "./middlewares/logger.js";
-import { notFoundHandler } from "./middlewares/notFoundHandler.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { logger } from "./middleware/logger.js";
+import { notFoundHandler } from "./middleware/notFoundHandler.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 import { errors } from 'celebrate';
-
+import { getEnvVar } from "./helpers/getEnvVar.js";
+import { ENV_VARS } from "./constants/envVars.js";
 
 const app = express();
 
@@ -38,10 +39,10 @@ app.get('/', (req, res) => {
 await connectMongoDB();
 
 // Start server
-app.listen(3003, (err) => {
+app.listen(PORT, (err) => {
   if (err) {
     console.log('❌ Error:', err);
   } else {
-    console.log('✅ Server is running on port 3003');
+    console.log(`✅ Server is running on port ${PORT}`);
   }
 });
