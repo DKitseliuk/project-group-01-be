@@ -21,8 +21,9 @@
   },
   "homepage": "https://github.com/DKitseliuk/project-group-01-be#readme",
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.1.0",
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
+    "eslint-plugin-import": "^2.32.0",
     "globals": "^17.4.0",
     "nodemon": "^3.1.14"
   },
