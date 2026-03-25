@@ -7,6 +7,7 @@ const locationTypeSchema = new Schema(
     shortDescription: { type: String, required: true, trim: true },
   },
   {
+    timestamps: true,
     versionKey: false,
   },
 );
