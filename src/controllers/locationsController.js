@@ -30,8 +30,9 @@ export const updateLocation = async (req, res) => {
   }
 
   const location = await locationsService.updateLocation(req, locationId);
+  
   if (!location) {
-    throw createHttpError(404, "Location not found");
+    throw createHttpError(404, 'Location not found');
   }
 
   res.status(200).json({ location });
