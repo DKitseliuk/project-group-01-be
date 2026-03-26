@@ -1,7 +1,11 @@
 import { Location } from '../models/location.js';
 
-const getAllLocations = () => {
-  return Location.find();
+const getAllLocations = (filter, sort, skip, limit) => {
+  return Location.find(filter).sort(sort).skip(skip).limit(limit);
+};
+
+const getAllLocationsCount = (filter) => {
+  return Location.find(filter).countDocuments();
 };
 
 const getLocationById = (locationId) => {
@@ -24,6 +28,7 @@ const updateLocation = (req, locationId) => {
 
 export default {
   getAllLocations,
+  getAllLocationsCount,
   getLocationById,
   createLocation,
   updateLocation,
