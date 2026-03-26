@@ -1,6 +1,6 @@
-import Location from '../models/location.js';
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { updateLocation as updateLocationService } from "../services/locationsService.js";
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
@@ -11,12 +11,7 @@ export const updateLocation = async (req, res) => {
     req.body.image = result.secure_url;
   }
 
-  const location = await Location.findOneAndUpdate(
-    { _id: locationId, ownerId: req.user._id },
-    req.body,
-    { new: true, runValidators: true }
-  );
-
+  const location = await updateLocationService(req, locationId);
   if (!location) {
     throw createHttpError(404, "Location not found");
   }

@@ -14,7 +14,7 @@ import { upload } from "../middleware/multer.js";
 const router = express.Router();
 
 router.patch(
-  "/locations/:locationId",
+  "/api/locations/:locationId",
   authenticate,
   upload.single("image"),
   celebrate(updateLocationSchema),
