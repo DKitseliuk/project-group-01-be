@@ -1,24 +1,37 @@
 // src/validations/authValidation.js
 
 import { Joi, Segments } from 'celebrate';
+import { USER_VALIDATION } from '../constants/validation.js';
 
 export const registerUserSchema = {
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(2).max(32).required().messages({
+    name: Joi.string()
+      .min(USER_VALIDATION.nameMinLength)
+      .max(USER_VALIDATION.nameMaxLength)
+      .required()
+      .messages({
       'string.base': 'Name must be a string',
       'string.empty': 'Name cannot be empty',
       'string.min': 'Name should have at least {#limit} characters',
       'string.max': 'Name should have at most {#limit} characters',
       'any.required': 'Name is required',
     }),
-    email: Joi.string().email().max(64).required().messages({
+    email: Joi.string()
+      .email()
+      .max(USER_VALIDATION.emailMaxLength)
+      .required()
+      .messages({
       'string.base': 'Email must be a string',
       'string.empty': 'Email cannot be empty',
       'string.email': 'Email must be valid',
       'string.max': 'Email should have at most {#limit} characters',
       'any.required': 'Email is required',
     }),
-    password: Joi.string().min(8).max(128).required().messages({
+    password: Joi.string()
+      .min(USER_VALIDATION.passwordMinLength)
+      .max(USER_VALIDATION.passwordMaxLength)
+      .required()
+      .messages({
       'string.base': 'Password must be a string',
       'string.empty': 'Password cannot be empty',
       'string.min': 'Password should have at least {#limit} characters',
@@ -29,18 +42,22 @@ export const registerUserSchema = {
 };
 export const loginUserSchema = {
   [Segments.BODY]: Joi.object({
-      email: Joi.string().email().max(64).required().messages({
+    email: Joi.string()
+      .email()
+      .max(USER_VALIDATION.emailMaxLength)
+      .required()
+      .messages({
       'string.base': 'Email must be a string',
       'string.empty': 'Email cannot be empty',
       'string.email': 'Email must be valid',
       'string.max': 'Email should have at most {#limit} characters',
       'any.required': 'Email is required',
     }),
-    password: Joi.string().min(8).max(128).required().messages({
+    password: Joi.string()
+      .required()
+      .messages({
       'string.base': 'Password must be a string',
       'string.empty': 'Password cannot be empty',
-      'string.min': 'Password should have at least {#limit} characters',
-      'string.max': 'Password should have at most {#limit} characters',
       'any.required': 'Password is required',
     }),
   }),
@@ -49,7 +66,11 @@ export const loginUserSchema = {
 
 export const requestResetEmailSchema = {
   [Segments.BODY]: Joi.object({
-     email: Joi.string().email().max(64).required().messages({
+    email: Joi.string()
+      .email()
+      .max(USER_VALIDATION.emailMaxLength)
+      .required()
+      .messages({
       'string.base': 'Email must be a string',
       'string.empty': 'Email cannot be empty',
       'string.email': 'Email must be valid',
@@ -61,7 +82,11 @@ export const requestResetEmailSchema = {
 
 export const resetPasswordSchema = {
   [Segments.BODY]: Joi.object({
-    password: Joi.string().min(8).max(128).required().messages({
+    password: Joi.string()
+      .min(USER_VALIDATION.passwordMinLength)
+      .max(USER_VALIDATION.passwordMaxLength)
+      .required()
+      .messages({
       'string.base': 'Password must be a string',
       'string.empty': 'Password cannot be empty',
       'string.min': 'Password should have at least {#limit} characters',
