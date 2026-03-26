@@ -3,6 +3,7 @@ import express from "express";
 import { celebrate } from "celebrate";
 import {
   updateLocation,
+  getLocationById,
 } from "../controllers/locationsController.js";
 import { authenticate } from "../middleware/authenticate.js";
 
@@ -12,6 +13,8 @@ import {
 import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
+
+router.get("/locations/:locationId", getLocationById);
 
 router.patch(
   "/locations/:locationId",

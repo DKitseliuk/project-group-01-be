@@ -1,6 +1,20 @@
-import Location from '../models/location.js';
+import { Location } from '../models/location.js';
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+
+export const getLocationById = async (req, res) => {
+  const { locationId } = req.params;
+
+  const location = await Location.findById(locationId)
+    .populate('ownerId', 'name')
+    .populate('feedbacksId');
+
+  if (!location) {
+    throw createHttpError(404, 'Location not found');
+  }
+
+  res.status(200).json(location);
+};
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
