@@ -52,7 +52,7 @@ export const createLocationValidation = {
         'string.trim': 'Name cannot contain leading or trailing spaces',
         'any.required': 'Name is required',
       }),
-    locationType: Joi.string()
+    type: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .required()
       .trim()
@@ -87,7 +87,7 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
-    image: Joi.string().uri().optional().messages({
+    image: Joi.string().uri().required().messages({
       'string.base': 'Image must be a string',
       'string.uri': 'Image must be a valid URI',
     }),
