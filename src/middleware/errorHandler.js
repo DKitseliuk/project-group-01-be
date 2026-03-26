@@ -1,6 +1,10 @@
-import { HttpError } from "http-errors";
+//  src/middleware/errorHandler.js
 
-export const errorHandler = (err, req, res, next) => {
+import { HttpError } from "http-errors";
+import { getEnvVar } from "../helpers/getEnvVar.js";
+import { ENV_VARS } from "../constants/envVars.js";
+
+export const errorHandler = (err, req, res, _next) => {
   console.log("Error Middleware:", err);
 
 
