@@ -6,6 +6,7 @@ const objectIdValidator = (value, helpers) => {
     ? helpers.message('Invalid locationId format')
     : value;
 };
+
 export const updateLocationSchema = {
   [Segments.PARAMS]: Joi.object({
     locationId: Joi.string().custom(objectIdValidator).required(),
@@ -19,4 +20,10 @@ export const updateLocationSchema = {
   image: Joi.string().optional(),
 
   }).min(1).unknown(false),
+};
+
+export const locationIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    locationId: Joi.string().custom(objectIdValidator).required(),
+}),
 };

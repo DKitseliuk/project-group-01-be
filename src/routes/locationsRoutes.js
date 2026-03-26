@@ -9,12 +9,13 @@ import { authenticate } from "../middleware/authenticate.js";
 
 import {
   updateLocationSchema,
+  locationIdSchema,
 } from "../validations/locationsValidation.js";
 import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
-router.get("/locations/:locationId", getLocationById);
+router.get("/locations/:locationId", celebrate(locationIdSchema), getLocationById);
 
 router.patch(
   "/locations/:locationId",
