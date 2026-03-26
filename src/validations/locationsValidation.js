@@ -7,16 +7,20 @@ const objectIdValidator = (value, helpers) => {
     ? helpers.message('Invalid locationId format')
     : value;
 };
+
 export const updateLocationSchema = {
   [Segments.PARAMS]: Joi.object({
     locationId: Joi.string().custom(objectIdValidator).required(),
   }),
 
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min().max(96).trim().optional(),
-    type: Joi.string().max(64).trim().optional(),
-    region: Joi.string().max(64).trim().optional(),
-    description: Joi.string().min(20).max(6000).optional(),
+    name: Joi.string().min(nameMinLength).max(nameMaxLength).trim().optional(),
+   locationType: Joi.string().max(locationTypeMaxLength).trim().optional(),
+    region: Joi.string().max(regionMaxLength).trim().optional(),
+    description: Joi.string()
+      .min(descriptionMinLength)
+      .max(descriptionMaxLength)
+      .optional(),
     image: Joi.string().optional(),
   })
     .min(1)
@@ -79,4 +83,9 @@ export const createLocationValidation = {
       'any.required': 'Images is required',
     }),
   }),
+  
+export const locationIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    locationId: Joi.string().custom(objectIdValidator).required(),
+}),
 };
