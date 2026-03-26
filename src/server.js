@@ -13,12 +13,16 @@ import feedbackRoutes from './routes/feedbackRoutes.js';
 
 const app = express();
 
+//MIddleware - Pino(pretty) logging
 app.use(logger);
 
+//Middleware - JSON parsing
 app.use(express.json());
 
+//Middleware - CORS
 app.use(cors());
 
+//Middleware - Cookies parser
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
@@ -28,10 +32,13 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(feedbackRoutes);
 
+//Middleware - 404 - Route not found
 app.use(notFoundHandler);
 
+//Middleware - Celebrate error catching
 app.use(errors());
 
+//Middleware - Error catching
 app.use(errorHandler);
 
 // DB connection
