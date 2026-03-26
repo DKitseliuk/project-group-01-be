@@ -1,16 +1,20 @@
-import multer from "multer";
+import multer from 'multer';
+import { LOCATION_VALIDATION } from '../constants/validation.js';
+
+const storage = multer.memoryStorage();
+
+const fileFilter = (req, file, cb) => {
+  if (LOCATION_VALIDATION.imageFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only jpg and png images are allowed'), false);
+  }
+};
 
 export const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 1024 * 1024 * 1,
-    },
-    fileFilter: (req, file, cb) => {
-        const allowedTypes = ['image/png', 'image/jpeg'];
-        if(allowedTypes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(new Error('Invalid file type. Only JPEG and PNG are allowed'), false);
-        }
-    },
+  storage,
+  limits: {
+    fileSize: LOCATION_VALIDATION.imageMaxSize,
+  },
+  fileFilter,
 });

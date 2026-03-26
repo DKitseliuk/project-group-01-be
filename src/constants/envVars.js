@@ -11,6 +11,7 @@ const ENV_VARS = {
   SMTP_PASSWORD: 'SMTP_PASSWORD',
   SMTP_FROM: 'SMTP_FROM',
   PORT: 'PORT',
+  NODE_ENV: 'NODE_ENV',
 };
 
 export { ENV_VARS };
