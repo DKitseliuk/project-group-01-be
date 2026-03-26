@@ -18,7 +18,7 @@ const router = express.Router();
 router.get("/locations/:locationId", celebrate(locationIdSchema), getLocationById);
 
 router.patch(
-  "/locations/:locationId",
+  "/api/locations/:locationId",
   authenticate,
   upload.single("image"),
   celebrate(updateLocationSchema),
