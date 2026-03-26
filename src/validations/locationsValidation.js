@@ -13,7 +13,7 @@ export const updateLocationSchema = {
   }),
 
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(3).max(96).trim().optional(),
+    name: Joi.string().min().max(96).trim().optional(),
     type: Joi.string().max(64).trim().optional(),
     region: Joi.string().max(64).trim().optional(),
     description: Joi.string().min(20).max(6000).optional(),
@@ -34,8 +34,9 @@ export const createLocationValidation = {
         'string.base': 'Name must be a string',
         'string.min': 'Name must be at least {#limit} characters long',
         'string.max': 'Name must be less than {#limit} characters long',
-        'string.empty': 'Name is required',
+        'string.empty': 'Name cannot be empty',
         'string.trim': 'Name cannot contain leading or trailing spaces',
+        'any.required': 'Name is required',
       }),
     type: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
@@ -44,8 +45,9 @@ export const createLocationValidation = {
       .messages({
         'string.base': 'Type must be a string',
         'string.max': 'Type must be less than {#limit} characters long',
-        'string.empty': 'Type is required',
+        'string.empty': 'Type cannot be empty',
         'string.trim': 'Type cannot contain leading or trailing spaces',
+        'any.required': 'Type is required',
       }),
     region: Joi.string()
       .max(LOCATION_VALIDATION.regionMaxLength)
@@ -54,8 +56,9 @@ export const createLocationValidation = {
       .messages({
         'string.base': 'Region must be a string',
         'string.max': 'Region must be less than {#limit} characters long',
-        'string.empty': 'Region is required',
+        'string.empty': 'Region cannot be empty',
         'string.trim': 'Region cannot contain leading or trailing spaces',
+        'any.required': 'Region is required',
       }),
     description: Joi.string()
       .min(LOCATION_VALIDATION.descriptionMinLength)
@@ -66,12 +69,14 @@ export const createLocationValidation = {
         'string.base': 'Description must be a string',
         'string.min': 'Description must be at least {#limit} characters long',
         'string.max': 'Description must be less than {#limit} characters long',
-        'string.empty': 'Description is required',
+        'string.empty': 'Description cannot be empty',
         'string.trim': 'Description cannot contain leading or trailing spaces',
+        'any.required': 'Description is required',
       }),
-    images: Joi.string().required().messages({
+    images: Joi.string(URL).required().messages({
       'string.base': 'Images must be an string',
-      'string.empty': 'Images is required',
+      'string.empty': 'Images cannot be empty',
+      'any.required': 'Images is required',
     }),
   }),
 };
