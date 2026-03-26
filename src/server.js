@@ -1,15 +1,16 @@
 import express from 'express';
-import cors from "cors";
-import cookieParser from "cookie-parser";
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { errors } from 'celebrate';
-import { logger } from "./middleware/logger.js";
-import { notFoundHandler } from "./middleware/notFoundHandler.js";
-import { errorHandler } from "./middleware/errorHandler.js";
-import { getEnvVar } from "./helpers/getEnvVar.js";
-import { ENV_VARS } from "./constants/envVars.js";
+import { logger } from './middleware/logger.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { getEnvVar } from './helpers/getEnvVar.js';
+import { ENV_VARS } from './constants/envVars.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 
 app.use(authRoutes);
 app.use(feedbackRoutes);
+app.use(userRoutes);
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);
