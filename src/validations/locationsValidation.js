@@ -35,3 +35,9 @@ export const updateLocationSchema = {
     .min(1)
     .unknown(false),
 };
+
+export const locationIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    locationId: Joi.string().custom(objectIdValidator).required(),
+}),
+};

@@ -1,6 +1,19 @@
 import createHttpError from 'http-errors';
+import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import { updateLocation as updateLocationService } from "../services/locationsService.js";
+import locationsService from "../services/locationsService.js";
+
+export const getLocationById = async (req, res) => {
+  const { locationId } = req.params;
+
+  const location = await locationsService.getLocationById(locationId);
+
+  if (!location) {
+    throw createHttpError(404, 'Location not found');
+  }
+
+  res.status(200).json({ location });
+};
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
@@ -11,10 +24,10 @@ export const updateLocation = async (req, res) => {
     req.body.image = result.secure_url;
   }
 
-  const location = await updateLocationService(req, locationId);
+  const location = await locationsService.updateLocation(req, locationId);
   if (!location) {
     throw createHttpError(404, "Location not found");
   }
 
-  res.status(200).json(location);
+  res.status(200).json({ location });
 };
