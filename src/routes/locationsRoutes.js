@@ -1,23 +1,32 @@
 // Route
-import express from "express";
-import { celebrate } from "celebrate";
+import express from 'express';
+import { celebrate } from 'celebrate';
 import {
+  createLocation,
   updateLocation,
-} from "../controllers/locationsController.js";
-import { authenticate } from "../middleware/authenticate.js";
+} from '../controllers/locationsController.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 import {
+  createLocationValidation,
   updateLocationSchema,
-} from "../validations/locationsValidation.js";
-import { upload } from "../middleware/multer.js";
+} from '../validations/locationsValidation.js';
+import { upload } from '../middleware/multer.js';
 
 const router = express.Router();
 
-router.patch(
-  "/locations/:locationId",
+router.post(
+  '/locations',
   authenticate,
-  upload.single("image"),
+  upload.single('image'),
+  celebrate(createLocationValidation),
+  createLocation,
+);
+router.patch(
+  '/locations/:locationId',
+  authenticate,
+  upload.single('image'),
   celebrate(updateLocationSchema),
-  updateLocation
+  updateLocation,
 );
 export default router;

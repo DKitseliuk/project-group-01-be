@@ -73,7 +73,7 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
-    images: Joi.string(URL).required().messages({
+    images: Joi.string().uri().required().messages({
       'string.base': 'Images must be an string',
       'string.empty': 'Images cannot be empty',
       'any.required': 'Images is required',

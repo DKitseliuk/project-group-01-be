@@ -2,6 +2,18 @@ import Location from '../models/location.js';
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
+export const createLocation = async (req, res) => {
+  const newLocation = await Location.create({
+    ...req.body,
+    userId: req.user._id,
+  });
+
+  res.status(201).json({
+    message: 'Location created successfully',
+    location: newLocation,
+  });
+};
+
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
