@@ -1,20 +1,30 @@
 // Route
 import express from 'express';
 import { celebrate } from 'celebrate';
-import { getAllLocations, updateLocation } from '../controllers/locationsController.js';
 import { authenticate } from '../middleware/authenticate.js';
-
-import { updateLocationSchema } from '../validations/locationsValidation.js';
 import { upload } from '../middleware/multer.js';
+import {
+  updateLocationSchema,
+  locationIdSchema,
+} from \../validations/locationsValidation.js';
+import {
+  updateLocation,
+  getLocationById,
+} from '../controllers/locationsController.js';
 
-const router = express.Router();
-router.get('/locations', getAllLocations);
 
-router.patch(
-  '/locations/:locationId',
+const locationsRouter = express.Router();
+
+locationsRouter.get('/api/locations', getAllLocations);
+
+locationsRouter.get('/api/locations/:locationId', celebrate(locationIdSchema), getLocationById);
+
+locationsRouter.patch(
+  '/api/locations/:locationId',
   authenticate,
   upload.single('image'),
   celebrate(updateLocationSchema),
   updateLocation,
 );
-export default router;
+
+export default locationsRouter;

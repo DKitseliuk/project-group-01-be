@@ -11,7 +11,7 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-
+import locationsRoutes from "./routes/locationsRoutes.js";
 const app = express();
 
 //MIddleware - Pino(pretty) logging
@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(feedbackRoutes);
 app.use(userRoutes);
+app.use(locationsRoutes);
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);

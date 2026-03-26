@@ -1,41 +1,38 @@
-import Location from '../models/location.js';
 import createHttpError from 'http-errors';
+import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import {
-  getAllLocations as getAllLocationsService,
-} from '../services/locationsService.js';
+import locationsService from "../services/locationsService.js";
 
 export const getAllLocations = async (req, res) => {
-  const locations = await getAllLocationsService();
+  const locations = await locationsService.getAllLocations();
 
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully found locations!',
-    data: locations,
-  });
+  res.status(200).json({ locations });
+};
+
+export const getLocationById = async (req, res) => {
+  const { locationId } = req.params;
+
+  const location = await locationsService.getLocationById(locationId);
+
+  if (!location) {
+    throw createHttpError(404, 'Location not found');
+  }
+
+  res.status(200).json({ location });
 };
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
-
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer);
     req.body.image = result.secure_url;
-
   }
 
-  const location = await Location.findOneAndUpdate(
-    { _id: locationId, ownerId: req.user._id },
-    req.body,
-    { new: true, runValidators: true }
-  );
-
+  const location = await locationsService.updateLocation(req, locationId);
   if (!location) {
     throw createHttpError(404, "Location not found");
   }
 
-  res.status(200).json(location);
+  res.status(200).json({ location });
 };
-
-
