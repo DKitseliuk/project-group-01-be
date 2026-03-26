@@ -9,6 +9,7 @@ import { getEnvVar } from "./helpers/getEnvVar.js";
 import { ENV_VARS } from "./constants/envVars.js";
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(authRoutes);
-
+app.use(feedbackRoutes);
 
 app.use(notFoundHandler);
 
