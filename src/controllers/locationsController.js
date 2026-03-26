@@ -3,6 +3,12 @@ import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import locationsService from "../services/locationsService.js";
 
+export const getAllLocations = async (req, res) => {
+  const locations = await locationsService.getAllLocations();
+
+  res.status(200).json({ locations });
+};
+
 export const getLocationById = async (req, res) => {
   const { locationId } = req.params;
 
@@ -17,7 +23,6 @@ export const getLocationById = async (req, res) => {
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
-
 
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer);
