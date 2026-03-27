@@ -3,27 +3,35 @@ import { celebrate } from 'celebrate';
 
 import { authenticate } from '../middleware/authenticate.js';
 import {
-  getFeedbacks,
+  getLocationFeedbacks,
+  getAllFeedbacks,
   createFeedback,
 } from '../controllers/feedbackController.js';
 import {
-  getFeedbacksSchema,
+  getFeedbacksByLocationSchema,
+  getAllFeedbacksSchema,
   createFeedbackSchema,
 } from '../validations/feedbackValidation.js';
 
 const router = Router();
 
 router.get(
-  '/api/feedbacks',
-  celebrate(getFeedbacksSchema),
-  getFeedbacks,
+  '/api/locations/:locationId/feedbacks',
+  celebrate(getFeedbacksByLocationSchema),
+  getLocationFeedbacks,
 );
 
 router.post(
-  '/api/feedbacks',
+  '/api/locations/:locationId/feedbacks',
   authenticate,
   celebrate(createFeedbackSchema),
   createFeedback,
+);
+
+router.get(
+  '/api/feedbacks',
+  celebrate(getAllFeedbacksSchema),
+  getAllFeedbacks,
 );
 
 export default router;
