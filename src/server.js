@@ -13,6 +13,7 @@ import feedbackRoutes from './routes/feedbackRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import locationsRoutes from "./routes/locationsRoutes.js";
 import regionsRoutes from "./routes/regionsRoutes.js";
+import locationTypesRouter from './routes/locationTypesRoutes.js';
 const app = express();
 
 //MIddleware - Pino(pretty) logging
@@ -36,6 +37,7 @@ app.use(feedbackRoutes);
 app.use(userRoutes);
 app.use(locationsRoutes);
 app.use(regionsRoutes);
+app.use(locationTypesRouter);
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);
