@@ -1,36 +1,14 @@
-import categoriesService from '../services/categotiesService.js';
-import { getRegionsQuerySchema } from '../validations/categoriesValidation.js';
+import categoriesService from '../services/categoriesService.js';
 
-export const getRegionsController = async (req, res, next) => {
-  try {
-    const { error, value } = getRegionsQuerySchema.validate(req.query);
 
-    if (error) {
-      return next({ status: 400, message: error.message });
-    }
+export const getAllRegions = async (req, res) => {
+  const regions = await categoriesService.getAllRegions();
 
-    const regions = await categoriesService.getAllRegions({ level: value.level });
-
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully fetched regions',
-      data: regions,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.status(200).json({ regions });
 };
 
-export const getLocationTypesController = async (req, res, next) => {
-  try {
-    const locationTypes = await categoriesService.getAllLocationTypes();
+export const getAllLocationTypes = async (req, res) => {
+  const locationTypes = await categoriesService.getAllLocationTypes();
 
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully fetched location types',
-      data: locationTypes,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.status(200).json({ locationTypes });
 };
