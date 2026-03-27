@@ -8,30 +8,70 @@ const objectIdValidator = (value, helpers) => {
     : value;
 };
 
-export const updateLocationSchema = {
+  export const updateLocationSchema = {
   [Segments.PARAMS]: Joi.object({
     locationId: Joi.string().custom(objectIdValidator).required(),
   }),
 
   [Segments.BODY]: Joi.object({
-    name: Joi.string()
+  name: Joi.string()
       .min(LOCATION_VALIDATION.nameMinLength)
       .max(LOCATION_VALIDATION.nameMaxLength)
       .trim()
-      .optional(),
-    locationType: Joi.string()
+      .messages({
+        'string.base': 'Name must be a string',
+        'string.min': 'Name must be at least {#limit} characters long',
+        'string.max': 'Name must be less than {#limit} characters long',
+        'string.empty': 'Name cannot be empty',
+        'string.trim': 'Name cannot contain leading or trailing spaces',
+      }),
+
+  type: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .trim()
-      .optional(),
-    region: Joi.string()
+      .messages({
+        'string.base': 'Location type must be a string',
+        'string.max': 'Location type must be less than {#limit} characters long',
+        'string.empty': 'Location type cannot be empty',
+        'string.trim': 'Location type cannot contain leading or trailing spaces',
+      }),
+
+  region: Joi.string()
       .max(LOCATION_VALIDATION.regionMaxLength)
       .trim()
-      .optional(),
-    description: Joi.string()
+      .messages({
+        'string.base': 'Region must be a string',
+        'string.max': 'Region must be less than {#limit} characters long',
+        'string.empty': 'Region cannot be empty',
+        'string.trim': 'Region cannot contain leading or trailing spaces',
+      }),
+
+  description: Joi.string()
       .min(LOCATION_VALIDATION.descriptionMinLength)
       .max(LOCATION_VALIDATION.descriptionMaxLength)
-      .optional(),
-    image: Joi.string().optional(),
+      .messages({
+        'string.base': 'Description must be a string',
+        'string.min': 'Description must be at least {#limit} characters long',
+        'string.max': 'Description must be less than {#limit} characters long',
+        'string.empty': 'Description cannot be empty',
+        'string.trim': 'Description cannot contain leading or trailing spaces',
+      }),
+
+  locationType: Joi.string()
+      .max(LOCATION_VALIDATION.locationTypeMaxLength)
+      .messages({
+        'string.base': 'Location-Type must be a string',
+        'string.min': 'Location-Type must be at least {#limit} characters long',
+        'string.max': 'Location-Type must be less than {#limit} characters long',
+        'string.empty': 'Location-Type cannot be empty',
+        'string.trim': 'Location-Type cannot contain leading or trailing spaces',
+      }),
+
+    image: Joi.string().uri()
+    .messages({
+      'string.base': 'Image must be a string',
+      'string.uri': 'Image must be a valid URI',
+    }),
   })
     .min(1)
     .unknown(false),
@@ -87,12 +127,13 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
-    image: Joi.string().uri().required().messages({
+     image: Joi.string().uri().required().messages({
       'string.base': 'Image must be a string',
       'string.uri': 'Image must be a valid URI',
     }),
   }),
 };
+
 
 export const locationIdSchema = {
   [Segments.PARAMS]: Joi.object({

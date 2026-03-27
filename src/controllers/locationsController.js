@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { Location } from '../models/location.js';
+// import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import locationsService from "../services/locationsService.js";
 
@@ -21,22 +21,6 @@ export const getLocationById = async (req, res) => {
   res.status(200).json({ location });
 };
 
-export const createLocation = async (req, res) => {
-  const payload = { ...req.body, ownerId: req.user._id };
-
-  if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
-    payload.image = result.secure_url;
-  }
-
-  const newLocation = await Location.create(payload);
-
-  res.status(201).json({
-    message: 'Location created successfully',
-    location: newLocation,
-  });
-};
-
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
@@ -46,7 +30,7 @@ export const updateLocation = async (req, res) => {
   }
 
   const location = await locationsService.updateLocation(req, locationId);
-  
+
   if (!location) {
     throw createHttpError(404, 'Location not found');
   }

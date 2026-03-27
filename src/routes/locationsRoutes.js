@@ -7,7 +7,7 @@ import {
   createLocationValidation,
   updateLocationSchema,
   locationIdSchema,
-} from '../validations/locationsValidation.js';
+} from "../validations/locationsValidation.js";
 import {
   createLocation,
   updateLocation,
@@ -17,7 +17,7 @@ import {
 
 const locationsRouter = express.Router();
 
-locationsRouter.get('/api/locations', getAllLocations);
+// locationsRouter.get('/api/locations', getAllLocations);
 
 locationsRouter.get(
   '/api/locations/:locationId',
