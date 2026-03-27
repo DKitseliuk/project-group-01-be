@@ -1,5 +1,11 @@
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
+import {
+  LOCATION_VALIDATION,
+  SORT_ORDER,
+  LOCATION_SORT_FIELDS,
+} from '../constants/validation.js';
+import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
 
 const objectIdValidator = (value, helpers) => {
   return !isValidObjectId(value)
@@ -9,18 +15,31 @@ const objectIdValidator = (value, helpers) => {
 
 export const getAllLocationsSchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1),
-    perPage: Joi.number().integer().min(1).max(100).default(12),
+    page: Joi.number()
+      .integer()
+      .min(LOCATIONS_PAGINATION.minPage)
+      .default(PAGINATION.defaultPage),
+    perPage: Joi.number()
+      .integer()
+      .min(LOCATIONS_PAGINATION.minPerPage)
+      .max(LOCATIONS_PAGINATION.maxPerPage)
+      .default(LOCATIONS_PAGINATION.defaultPerPage),
     search: Joi.string().trim().allow('').optional(),
     region: Joi.string().trim().optional(),
     type: Joi.string().trim().optional(),
-
     sortBy: Joi.string()
-      .valid('name', 'region', 'locationType', 'rate', 'createdAt', 'updatedAt')
+      .valid(...LOCATION_SORT_FIELDS)
       .default('createdAt'),
-
-    sortOrder: Joi.string().valid('asc', 'desc').default('desc'),
+    sortOrder: Joi.string()
+      .valid(...SORT_ORDER)
+      .default('desc'),
   }).unknown(false),
+};
+
+export const locationIdValidator = {
+  [Segments.PARAMS]: Joi.object({
+    locationId: Joi.string().custom(objectIdValidator).required(),
+  }),
 };
 
 export const updateLocationSchema = {
@@ -29,9 +48,22 @@ export const updateLocationSchema = {
   }),
 
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(3).max(96).trim().optional(),
-    type: Joi.string().max(64).trim().optional(),
-    region: Joi.string().max(64).trim().optional(),
-    description: Joi.string().min(20).max(6000).optional(),
+    name: Joi.string()
+      .min(LOCATION_VALIDATION.nameMinLength)
+      .max(LOCATION_VALIDATION.nameMaxLength)
+      .trim()
+      .optional(),
+    type: Joi.string()
+      .max(LOCATION_VALIDATION.locationTypeMaxLength)
+      .trim()
+      .optional(),
+    region: Joi.string()
+      .max(LOCATION_VALIDATION.regionMaxLength)
+      .trim()
+      .optional(),
+    description: Joi.string()
+      .min(LOCATION_VALIDATION.descriptionMinLength)
+      .max(LOCATION_VALIDATION.descriptionMaxLength)
+      .optional(),
   }).unknown(false),
 };

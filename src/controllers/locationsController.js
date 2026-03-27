@@ -1,40 +1,55 @@
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import {
-  getAllLocations as getAllLocationsService,
-  getLocationById as getLocationByIdService,
-  createLocation as createLocationService,
-  updateLocation as updateLocationService,
-} from '../services/locationsService.js';
+import locationsService from '../services/locationsService.js';
+import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
+import { getPagination } from '../helpers/pagination.js';
 
 export const getAllLocations = async (req, res) => {
-  const { page, perPage, search, region, type, sortBy, sortOrder } = req.query;
+  const { search, region, type, sortBy, sortOrder } = req.query;
 
-  const locations = await getAllLocationsService({
-    page,
-    perPage,
-    search,
-    region,
-    type,
-    sortBy,
-    sortOrder,
-  });
+  const { page, perPage, skip, limit } = getPagination(
+    req.query,
+    LOCATIONS_PAGINATION,
+  );
+
+  const filter = {};
+
+  if (search) {
+    filter.name = { $regex: search, $options: 'i' };
+  }
+
+  if (region) {
+    filter.region = region;
+  }
+
+  if (type) {
+    filter.locationType = type;
+  }
+
+  const sort = {
+    [sortBy]: sortOrder === 'asc' ? 1 : -1,
+  };
+
+  const [locations, totalItems] = await Promise.all([
+    locationsService.getAllLocations(filter, sort, skip, limit),
+    locationsService.getAllLocationsCount(filter),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / perPage);
 
   res.status(200).json({
-    status: 200,
-    message: 'Successfully found locations!',
-    data: locations.data,
-    page: locations.page,
-    perPage: locations.perPage,
-    totalItems: locations.totalItems,
-    totalPages: locations.totalPages,
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    locations,
   });
 };
 
 export const getLocationById = async (req, res) => {
   const { locationId } = req.params;
 
-  const location = await getLocationByIdService(locationId);
+  const location = await locationsService.getLocationById(locationId);
 
   if (!location) {
     throw createHttpError(404, 'Location not found');
@@ -53,46 +68,24 @@ export const createLocation = async (req, res) => {
     throw createHttpError(400, 'No file');
   }
 
-  if (payload.type) {
-    payload.locationType = payload.type;
-    delete payload.type;
-  }
-
-  const location = await createLocationService(payload);
+  const location = await locationsService.createLocation(payload);
 
   res.status(201).json({ location });
 };
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
-  const payload = { ...req.body };
-
-  if (!req.file && Object.keys(req.body).length === 0) {
-    throw createHttpError(400, 'At least one field or image must be provided');
-  }
 
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer);
-    payload.image = result.secure_url;
+    req.body.image = result.secure_url;
   }
 
-  if (payload.type) {
-    payload.locationType = payload.type;
-    delete payload.type;
-  }
-
-  const location = await updateLocationService(
-    { _id: locationId, ownerId: req.user._id },
-    payload,
-  );
+  const location = await locationsService.updateLocation(req, locationId);
 
   if (!location) {
     throw createHttpError(404, 'Location not found');
   }
 
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully updated location!',
-    data: location,
-  });
+  res.status(200).json({ location });
 };

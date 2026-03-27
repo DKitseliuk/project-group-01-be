@@ -1,14 +1,7 @@
-// Route
 import express from 'express';
 import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
-import {
-  createLocation,
-  updateLocation,
-  getLocationById,
-  getAllLocations,
-} from '../controllers/locationsController.js';
-import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/multer.js';
 
 import {
   createLocationValidation,
@@ -16,12 +9,18 @@ import {
   locationIdValidator,
   getAllLocationsSchema,
 } from '../validations/locationsValidation.js';
-import { upload } from '../middleware/multer.js';
+
+import {
+  createLocation,
+  updateLocation,
+  getLocationById,
+  getAllLocations,
+} from '../controllers/locationsController.js';
 
 const locationsRouter = express.Router();
 
 locationsRouter.get(
-  '/locations',
+  '/api/locations',
   celebrate(getAllLocationsSchema),
   getAllLocations,
 );
@@ -41,10 +40,11 @@ locationsRouter.post(
 );
 
 locationsRouter.patch(
-  '/locations/:locationId',
+  '/api/locations/:locationId',
   authenticate,
   upload.single('image'),
   celebrate(updateLocationSchema),
   updateLocation,
 );
-export default router;
+
+export default locationsRouter;

@@ -1,61 +1,35 @@
 import { Location } from '../models/location.js';
 
-export const getAllLocations = async ({
-  page,
-  perPage,
-  search,
-  region,
-  type,
-  sortBy,
-  sortOrder,
-}) => {
-  const skip = (page - 1) * perPage;
-
-  const filter = {};
-
-  if (region) {
-    filter.region = region;
-  }
-
-  if (type) {
-    filter.locationType = type;
-  }
-
-  if (search) {
-    filter.name = { $regex: search, $options: 'i' };
-  }
-
-  const sort = {
-    [sortBy]: sortOrder === 'asc' ? 1 : -1,
-  };
-
-  const [totalItems, locations] = await Promise.all([
-    Location.countDocuments(filter),
-    Location.find(filter).sort(sort).skip(skip).limit(perPage),
-  ]);
-
-  const totalPages = Math.ceil(totalItems / perPage);
-
-  return {
-    data: locations,
-    page,
-    perPage,
-    totalItems,
-    totalPages,
-  };
+const getAllLocations = (filter, sort, skip, limit) => {
+  return Location.find(filter).sort(sort).skip(skip).limit(limit);
 };
 
-export const getLocationById = async (locationId) => {
-  return await Location.findById(locationId);
+const getAllLocationsCount = (filter) => {
+  return Location.find(filter).countDocuments();
 };
 
-export const createLocation = async (payload) => {
-  return await Location.create(payload);
+const getLocationById = (locationId) => {
+  return Location.findById(locationId)
+    .populate('ownerId', 'name')
+    .populate('feedbacksId');
 };
 
-export const updateLocation = async (filter, payload) => {
-  return await Location.findOneAndUpdate(filter, payload, {
-    new: true,
-    runValidators: true,
-  });
+const createLocation = (payload) => {
+  return Location.create(payload);
+};
+
+const updateLocation = (req, locationId) => {
+  return Location.findOneAndUpdate(
+    { _id: locationId, ownerId: req.user._id },
+    req.body,
+    { returnDocument: 'after' },
+  );
+};
+
+export default {
+  getAllLocations,
+  getAllLocationsCount,
+  getLocationById,
+  createLocation,
+  updateLocation,
 };

@@ -7,4 +7,12 @@ const USER_LOCATIONS_PAGINATION = {
   maxPerPage: 18,
 };
 
-export { USER_LOCATIONS_PAGINATION };
+const LOCATIONS_PAGINATION = {
+  minPage: 1,
+  defaultPage: 1,
+  minPerPage: 1,
+  defaultPerPage: 12,
+  maxPerPage: 100,
+};
+
+export { USER_LOCATIONS_PAGINATION, LOCATIONS_PAGINATION };
