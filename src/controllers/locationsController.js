@@ -1,7 +1,6 @@
 import createHttpError from 'http-errors';
-// import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import locationsService from "../services/locationsService.js";
+import locationsService from '../services/locationsService.js';
 
 export const getAllLocations = async (req, res) => {
   const locations = await locationsService.getAllLocations();
@@ -19,6 +18,21 @@ export const getLocationById = async (req, res) => {
   }
 
   res.status(200).json({ location });
+};
+
+export const createLocation = async (req, res) => {
+  const payload = { ...req.body, ownerId: req.user._id };
+
+  if (req.file) {
+    const result = await saveFileToCloudinary(req.file.buffer);
+    payload.image = result.secure_url;
+  } else {
+    throw createHttpError(400, 'No file');
+  }
+
+  const location = await locationsService.createLocation(payload);
+
+  res.status(201).json({ location });
 };
 
 export const updateLocation = async (req, res) => {

@@ -1,12 +1,8 @@
 // src/validations/userValidation.js
 
 import { Joi, Segments } from 'celebrate';
-import { isValidObjectId } from 'mongoose';
+import { objectIdValidator } from '../helpers/objectIdValidator.js';
 import { USER_LOCATIONS_PAGINATION } from '../constants/pagination.js';
-
-const objectIdValidator = (value, helpers) => {
-  return isValidObjectId(value) ? value : helpers.message('Invalid id format');
-};
 
 const userIdValidation = Joi.object({
   userId: Joi.string().custom(objectIdValidator).required().messages({

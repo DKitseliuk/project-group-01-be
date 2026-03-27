@@ -1,20 +1,19 @@
 import { Joi, Segments } from 'celebrate';
-import { isValidObjectId } from 'mongoose';
+import { objectIdValidator } from '../helpers/objectIdValidator.js';
 import { LOCATION_VALIDATION } from '../constants/validation.js';
 
-const objectIdValidator = (value, helpers) => {
-  return !isValidObjectId(value)
-    ? helpers.message('Invalid locationId format')
-    : value;
-};
-
-  export const updateLocationSchema = {
+export const updateLocationSchema = {
   [Segments.PARAMS]: Joi.object({
-    locationId: Joi.string().custom(objectIdValidator).required(),
+    locationId: Joi.string().custom(objectIdValidator).required().messages({
+      'string.base': 'locationId must be a string',
+      'string.empty': 'locationId cannot be empty',
+      'any.custom': 'locationId must be valid id format',
+      'any.required': 'locationId is required',
+    }),
   }),
 
   [Segments.BODY]: Joi.object({
-  name: Joi.string()
+    name: Joi.string()
       .min(LOCATION_VALIDATION.nameMinLength)
       .max(LOCATION_VALIDATION.nameMaxLength)
       .trim()
@@ -26,17 +25,19 @@ const objectIdValidator = (value, helpers) => {
         'string.trim': 'Name cannot contain leading or trailing spaces',
       }),
 
-  type: Joi.string()
+    type: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .trim()
       .messages({
         'string.base': 'Location type must be a string',
-        'string.max': 'Location type must be less than {#limit} characters long',
+        'string.max':
+          'Location type must be less than {#limit} characters long',
         'string.empty': 'Location type cannot be empty',
-        'string.trim': 'Location type cannot contain leading or trailing spaces',
+        'string.trim':
+          'Location type cannot contain leading or trailing spaces',
       }),
 
-  region: Joi.string()
+    region: Joi.string()
       .max(LOCATION_VALIDATION.regionMaxLength)
       .trim()
       .messages({
@@ -46,7 +47,7 @@ const objectIdValidator = (value, helpers) => {
         'string.trim': 'Region cannot contain leading or trailing spaces',
       }),
 
-  description: Joi.string()
+    description: Joi.string()
       .min(LOCATION_VALIDATION.descriptionMinLength)
       .max(LOCATION_VALIDATION.descriptionMaxLength)
       .messages({
@@ -57,21 +58,17 @@ const objectIdValidator = (value, helpers) => {
         'string.trim': 'Description cannot contain leading or trailing spaces',
       }),
 
-  locationType: Joi.string()
+    locationType: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .messages({
         'string.base': 'Location-Type must be a string',
         'string.min': 'Location-Type must be at least {#limit} characters long',
-        'string.max': 'Location-Type must be less than {#limit} characters long',
+        'string.max':
+          'Location-Type must be less than {#limit} characters long',
         'string.empty': 'Location-Type cannot be empty',
-        'string.trim': 'Location-Type cannot contain leading or trailing spaces',
+        'string.trim':
+          'Location-Type cannot contain leading or trailing spaces',
       }),
-
-    image: Joi.string().uri()
-    .messages({
-      'string.base': 'Image must be a string',
-      'string.uri': 'Image must be a valid URI',
-    }),
   })
     .min(1)
     .unknown(false),
@@ -98,9 +95,11 @@ export const createLocationValidation = {
       .trim()
       .messages({
         'string.base': 'Location type must be a string',
-        'string.max': 'Location type must be less than {#limit} characters long',
+        'string.max':
+          'Location type must be less than {#limit} characters long',
         'string.empty': 'Location type cannot be empty',
-        'string.trim': 'Location type cannot contain leading or trailing spaces',
+        'string.trim':
+          'Location type cannot contain leading or trailing spaces',
         'any.required': 'Location type is required',
       }),
     region: Joi.string()
@@ -127,16 +126,16 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
-     image: Joi.string().uri().required().messages({
-      'string.base': 'Image must be a string',
-      'string.uri': 'Image must be a valid URI',
-    }),
-  }),
+  }).unknown(false),
 };
 
-
-export const locationIdSchema = {
+export const locationIdValidator = {
   [Segments.PARAMS]: Joi.object({
-    locationId: Joi.string().custom(objectIdValidator).required(),
+    locationId: Joi.string().custom(objectIdValidator).required().messages({
+      'string.base': 'locationId must be a string',
+      'string.empty': 'locationId cannot be empty',
+      'any.custom': 'locationId must be valid id format',
+      'any.required': 'locationId is required',
+    }),
   }),
 };
