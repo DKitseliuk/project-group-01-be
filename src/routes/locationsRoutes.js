@@ -6,7 +6,7 @@ import { upload } from '../middleware/multer.js';
 import {
   updateLocationSchema,
   locationIdSchema,
-} from \../validations/locationsValidation.js';
+} from "../validations/locationsValidation.js";
 import {
   updateLocation,
   getLocationById,
@@ -15,7 +15,7 @@ import {
 
 const locationsRouter = express.Router();
 
-locationsRouter.get('/api/locations', getAllLocations);
+// locationsRouter.get('/api/locations', getAllLocations);
 
 locationsRouter.get('/api/locations/:locationId', celebrate(locationIdSchema), getLocationById);
 
