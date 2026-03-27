@@ -14,6 +14,7 @@ import userRoutes from './routes/userRoutes.js';
 import locationsRoutes from "./routes/locationsRoutes.js";
 import categoriesRoutes from "./routes/categoriesRoures.js";
 
+import locationsRoutes from './routes/locationsRoutes.js';
 const app = express();
 
 //MIddleware - Pino(pretty) logging
