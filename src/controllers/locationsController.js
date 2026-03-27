@@ -75,6 +75,10 @@ export const createLocation = async (req, res) => {
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
+  if (!req.file && Object.keys(req.body).length === 0) {
+    throw createHttpError(400, 'At least one field or image must be provided');
+  }
+
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer);
     req.body.image = result.secure_url;

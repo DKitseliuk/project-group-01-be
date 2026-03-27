@@ -9,7 +9,6 @@ import {
   createLocationValidation,
   updateLocationValidation,
 } from '../validations/locationsValidation.js';
-
 import {
   getAllLocations,
   getLocationById,
