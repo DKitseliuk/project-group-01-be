@@ -14,12 +14,22 @@ export const updateLocationSchema = {
   }),
 
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(nameMinLength).max(nameMaxLength).trim().optional(),
-   locationType: Joi.string().max(locationTypeMaxLength).trim().optional(),
-    region: Joi.string().max(regionMaxLength).trim().optional(),
+    name: Joi.string()
+      .min(LOCATION_VALIDATION.nameMinLength)
+      .max(LOCATION_VALIDATION.nameMaxLength)
+      .trim()
+      .optional(),
+    locationType: Joi.string()
+      .max(LOCATION_VALIDATION.locationTypeMaxLength)
+      .trim()
+      .optional(),
+    region: Joi.string()
+      .max(LOCATION_VALIDATION.regionMaxLength)
+      .trim()
+      .optional(),
     description: Joi.string()
-      .min(descriptionMinLength)
-      .max(descriptionMaxLength)
+      .min(LOCATION_VALIDATION.descriptionMinLength)
+      .max(LOCATION_VALIDATION.descriptionMaxLength)
       .optional(),
     image: Joi.string().optional(),
   })
@@ -47,11 +57,11 @@ export const createLocationValidation = {
       .required()
       .trim()
       .messages({
-        'string.base': 'Type must be a string',
-        'string.max': 'Type must be less than {#limit} characters long',
-        'string.empty': 'Type cannot be empty',
-        'string.trim': 'Type cannot contain leading or trailing spaces',
-        'any.required': 'Type is required',
+        'string.base': 'Location type must be a string',
+        'string.max': 'Location type must be less than {#limit} characters long',
+        'string.empty': 'Location type cannot be empty',
+        'string.trim': 'Location type cannot contain leading or trailing spaces',
+        'any.required': 'Location type is required',
       }),
     region: Joi.string()
       .max(LOCATION_VALIDATION.regionMaxLength)
@@ -77,15 +87,15 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
-    images: Joi.string(URL).required().messages({
-      'string.base': 'Images must be an string',
-      'string.empty': 'Images cannot be empty',
-      'any.required': 'Images is required',
+    image: Joi.string().uri().required().messages({
+      'string.base': 'Image must be a string',
+      'string.uri': 'Image must be a valid URI',
     }),
   }),
-  
+};
+
 export const locationIdSchema = {
   [Segments.PARAMS]: Joi.object({
     locationId: Joi.string().custom(objectIdValidator).required(),
-}),
+  }),
 };

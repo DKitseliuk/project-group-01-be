@@ -11,7 +11,7 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import locationsRoutes from "./routes/locationsRoutes.js";
+import locationsRoutes from './routes/locationsRoutes.js';
 const app = express();
 
 //MIddleware - Pino(pretty) logging
