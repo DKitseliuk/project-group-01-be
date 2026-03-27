@@ -17,6 +17,14 @@ export const createSession = async (userId) => {
   });
 };
 
+export const deleteSession = (payload) => {
+  return Session.deleteOne(payload);
+};
+
+export const findSession = (payload) => {
+  return Session.findOne(payload);
+};
+
 export const setSessionCookies = (res, session) => {
   res.cookie('accessToken', session.accessToken, {
     httpOnly: true,
