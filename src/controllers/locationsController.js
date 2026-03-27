@@ -45,7 +45,6 @@ export const getAllLocations = async (req, res) => {
     locations,
   });
 };
-
 export const getLocationById = async (req, res) => {
   const { locationId } = req.params;
 
