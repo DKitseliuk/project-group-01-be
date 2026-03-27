@@ -44,3 +44,18 @@ export const getAllLocations = async ({
     totalPages,
   };
 };
+
+export const getLocationById = async (locationId) => {
+  return await Location.findById(locationId);
+};
+
+export const createLocation = async (payload) => {
+  return await Location.create(payload);
+};
+
+export const updateLocation = async (filter, payload) => {
+  return await Location.findOneAndUpdate(filter, payload, {
+    new: true,
+    runValidators: true,
+  });
+};

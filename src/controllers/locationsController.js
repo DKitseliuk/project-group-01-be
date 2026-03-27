@@ -1,4 +1,3 @@
-import { Location } from '../models/location.js';
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import {
