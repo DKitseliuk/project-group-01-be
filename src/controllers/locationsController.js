@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { Location } from '../models/location.js';
+// import { Location } from '../models/location.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import locationsService from "../services/locationsService.js";
 
@@ -30,7 +30,7 @@ export const updateLocation = async (req, res) => {
   }
 
   const location = await locationsService.updateLocation(req, locationId);
-  
+
   if (!location) {
     throw createHttpError(404, 'Location not found');
   }
