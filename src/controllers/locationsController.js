@@ -1,10 +1,16 @@
 import { Location } from '../models/location.js';
 import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import locationsService from '../services/locationsService.js';
+import {
+  getAllLocations as getAllLocationsService,
+  getLocationById as getLocationByIdService,
+  createLocation as createLocationService,
+  updateLocation as updateLocationService,
+} from '../services/locationsService.js';
 
 export const getAllLocations = async (req, res) => {
   const { page, perPage, search, region, type, sortBy, sortOrder } = req.query;
+
   const locations = await getAllLocationsService({
     page,
     perPage,
@@ -29,7 +35,7 @@ export const getAllLocations = async (req, res) => {
 export const getLocationById = async (req, res) => {
   const { locationId } = req.params;
 
-  const location = await locationsService.getLocationById(locationId);
+  const location = await getLocationByIdService(locationId);
 
   if (!location) {
     throw createHttpError(404, 'Location not found');
@@ -53,7 +59,7 @@ export const createLocation = async (req, res) => {
     delete payload.type;
   }
 
-  const location = await locationsService.createLocation(payload);
+  const location = await createLocationService(payload);
 
   res.status(201).json({ location });
 };
@@ -72,7 +78,7 @@ export const updateLocation = async (req, res) => {
     delete payload.type;
   }
 
-  const location = await locationsService.updateLocation(
+  const location = await updateLocationService(
     { _id: locationId, ownerId: req.user._id },
     payload,
   );
