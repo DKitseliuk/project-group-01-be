@@ -15,6 +15,10 @@ const createUser = (payload) => {
   return User.create(payload);
 };
 
+const updateUser = (userId, payload) => {
+  return User.findByIdAndUpdate(userId, payload, { returnDocument: 'after' });
+};
+
 const getUserLocations = (userId, skip, limit) => {
   return Location.find({
     ownerId: userId,
@@ -29,4 +33,11 @@ const getUserLocationsCount = (userId) => {
   }).countDocuments();
 };
 
-export default { getUserById, getUserByEmail, createUser, getUserLocations, getUserLocationsCount };
+export default {
+  getUserById,
+  getUserByEmail,
+  createUser,
+  updateUser,
+  getUserLocations,
+  getUserLocationsCount,
+};
