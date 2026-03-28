@@ -18,7 +18,7 @@ export const getAllLocationsSchema = {
     page: Joi.number()
       .integer()
       .min(LOCATIONS_PAGINATION.minPage)
-      .default(PAGINATION.defaultPage),
+      .default(LOCATIONS_PAGINATION.defaultPage),
     perPage: Joi.number()
       .integer()
       .min(LOCATIONS_PAGINATION.minPerPage)
