@@ -1,27 +1,25 @@
 // src/controllers/authController.js
 
 import createHttpError from 'http-errors';
-import { User } from '../models/user.js';
 import bcrypt from 'bcrypt';
 
-import { createSession } from '../services/authService.js';
-import { Session } from '../models/session.js';
-import { setSessionCookies } from '../services/authService.js';
+import { createSession, deleteSession, findSession, setSessionCookies } from '../services/authService.js';
+import userService from '../services/userService.js';
 
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await userService.getUserByEmail(email);
   if (existingUser) {
     throw createHttpError(409, 'Email in use');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({
+  const newUser = await userService.createUser({
     name,
     email,
-    password: hashedPassword,
+    password: hashedPassword
   });
 
   const newSession = await createSession(newUser._id);
@@ -34,7 +32,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+const user = await userService.getUserByEmail(email);
   if (!user) {
     throw createHttpError(401, 'Invalid credentials');
   }
@@ -44,7 +42,7 @@ export const loginUser = async (req, res) => {
     throw createHttpError(401, 'Invalid credentials');
   }
 
-  await Session.deleteOne({ userId: user._id });
+  await deleteSession({ userId: user._id });
 
   const newSession = await createSession(user._id);
 
@@ -57,7 +55,7 @@ export const logoutUser = async (req, res) => {
   const { sessionId } = req.cookies;
 
   if (sessionId) {
-    await Session.deleteOne({ _id: sessionId });
+    await deleteSession({ _id: sessionId });
   }
 
   res.clearCookie('sessionId');
@@ -68,7 +66,7 @@ export const logoutUser = async (req, res) => {
 };
 
 export const refreshUserSession = async (req, res) => {
-  const session = await Session.findOne({
+  const session = await findSession({
     _id: req.cookies.sessionId,
     refreshToken: req.cookies.refreshToken,
   });
@@ -84,7 +82,7 @@ export const refreshUserSession = async (req, res) => {
     throw createHttpError(401, 'Session token expired');
   }
 
-  await Session.deleteOne({
+  await deleteSession({
     _id: req.cookies.sessionId,
     refreshToken: req.cookies.refreshToken,
   });

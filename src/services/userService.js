@@ -7,6 +7,14 @@ const getUserById = (userId) => {
   return User.findById(userId);
 };
 
+const getUserByEmail = (email) => {
+  return User.findOne({ email });
+};
+
+const createUser = (payload) => {
+  return User.create(payload);
+};
+
 const getUserLocations = (userId, skip, limit) => {
   return Location.find({
     ownerId: userId,
@@ -21,4 +29,4 @@ const getUserLocationsCount = (userId) => {
   }).countDocuments();
 };
 
-export default { getUserById, getUserLocations, getUserLocationsCount };
+export default { getUserById, getUserByEmail, createUser, getUserLocations, getUserLocationsCount };

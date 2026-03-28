@@ -1,5 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-
+import { objectIdValidator } from '../helpers/objectIdValidator.js';
 import { FEEDBACK_PAGINATION } from '../constants/pagination.js';
 import { locationIdSchema } from './locationsValidation.js';
 

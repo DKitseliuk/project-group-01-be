@@ -4,24 +4,29 @@ import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 import {
+  getAllLocationsValidator,
+  locationIdValidator,
   createLocationValidation,
-  updateLocationSchema,
-  locationIdSchema,
+  updateLocationValidation,
 } from '../validations/locationsValidation.js';
 import {
+  getAllLocations,
+  getLocationById,
   createLocation,
   updateLocation,
-  getLocationById,
-  getAllLocations,
 } from '../controllers/locationsController.js';
 
 const locationsRouter = express.Router();
 
-locationsRouter.get('/api/locations', getAllLocations);
+locationsRouter.get(
+  '/api/locations',
+  celebrate(getAllLocationsValidator),
+  getAllLocations,
+);
 
 locationsRouter.get(
   '/api/locations/:locationId',
-  celebrate(locationIdSchema),
+  celebrate(locationIdValidator),
   getLocationById,
 );
 
@@ -37,7 +42,7 @@ locationsRouter.patch(
   '/api/locations/:locationId',
   authenticate,
   upload.single('image'),
-  celebrate(updateLocationSchema),
+  celebrate(updateLocationValidation),
   updateLocation,
 );
 
