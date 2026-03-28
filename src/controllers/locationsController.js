@@ -3,6 +3,7 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import locationsService from '../services/locationsService.js';
 import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
 import { getPagination } from '../helpers/pagination.js';
+import { FOLDERS } from '../constants/cloudinary.js';
 
 export const getAllLocations = async (req, res) => {
   const { search, region, type, sortBy, sortOrder } = req.query;
@@ -64,7 +65,10 @@ export const createLocation = async (req, res) => {
   const payload = { ...req.body, ownerId: req.user._id };
 
   if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
+    const result = await saveFileToCloudinary(req.file.buffer, {
+      folder: FOLDERS.locations,
+      name: `location_${Date.now()}`,
+    });
     payload.image = result.secure_url;
   } else {
     throw createHttpError(400, 'No file');
@@ -85,8 +89,15 @@ export const updateLocation = async (req, res) => {
 
   const payload = { ...req.body };
 
+  if (Object.keys(payload).length === 0 && !req.file) {
+    throw createHttpError(400, 'Must be at least one change');
+  }
+
   if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
+    const result = await saveFileToCloudinary(req.file.buffer, {
+      folder: FOLDERS.locations,
+      name: `location_${locationId}`,
+    });
     payload.image = result.secure_url;
   }
 
