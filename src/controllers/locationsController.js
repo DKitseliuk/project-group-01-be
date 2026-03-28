@@ -15,7 +15,10 @@ export const getAllLocations = async (req, res) => {
   const filter = {};
 
   if (search) {
-    filter.name = { $regex: search, $options: 'i' };
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } },
+    ];
   }
 
   if (region) {
@@ -75,16 +78,19 @@ export const createLocation = async (req, res) => {
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
-  if (!req.file && Object.keys(req.body).length === 0) {
-    throw createHttpError(400, 'At least one field or image must be provided');
-  }
+  const filter = {
+    _id: locationId,
+    ownerId: req.user._id,
+  };
+
+  const payload = { ...req.body };
 
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer);
-    req.body.image = result.secure_url;
+    payload.image = result.secure_url;
   }
 
-  const location = await locationsService.updateLocation(req, locationId);
+  const location = await locationsService.updateLocation(filter, payload);
 
   if (!location) {
     throw createHttpError(404, 'Location not found');

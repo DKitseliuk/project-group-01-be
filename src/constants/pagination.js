@@ -10,9 +10,9 @@ const USER_LOCATIONS_PAGINATION = {
 const LOCATIONS_PAGINATION = {
   minPage: 1,
   defaultPage: 1,
-  minPerPage: 1,
-  defaultPerPage: 12,
-  maxPerPage: 100,
+  minPerPage: 3,
+  defaultPerPage: 9,
+  maxPerPage: 24,
 };
 
 export { USER_LOCATIONS_PAGINATION, LOCATIONS_PAGINATION };

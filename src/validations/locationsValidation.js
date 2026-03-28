@@ -1,32 +1,57 @@
 import { Joi, Segments } from 'celebrate';
 import { objectIdValidator } from '../helpers/objectIdValidator.js';
-import {
-  LOCATION_VALIDATION,
-  LOCATION_SORT_FIELDS,
-  SORT_ORDER,
-} from '../constants/validation.js';
+import { LOCATION_VALIDATION } from '../constants/validation.js';
 import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
+import {
+  DEFAULT_LOCATION_SORT_FIELD,
+  DEFAULT_SORT_ORDER,
+  LOCATION_SORT_FIELDS,
+  SORT_ORDERS,
+} from '../constants/sort.js';
 
 export const getAllLocationsValidator = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number()
       .integer()
       .min(LOCATIONS_PAGINATION.minPage)
-      .default(LOCATIONS_PAGINATION.defaultPage),
+      .default(LOCATIONS_PAGINATION.defaultPage)
+      .messages({
+        'number.base': 'Page must be a number',
+        'number.min': 'Page must be at least {#limit}',
+      }),
     perPage: Joi.number()
       .integer()
       .min(LOCATIONS_PAGINATION.minPerPage)
       .max(LOCATIONS_PAGINATION.maxPerPage)
-      .default(LOCATIONS_PAGINATION.defaultPerPage),
-    search: Joi.string().trim().allow('').optional(),
-    region: Joi.string().trim().optional(),
-    type: Joi.string().trim().optional(),
+      .default(LOCATIONS_PAGINATION.defaultPerPage)
+      .messages({
+        'number.base': 'PerPage must be a number',
+        'number.min': 'PerPage must be at least {#limit}',
+        'number.max': 'PerPage must be at most {#limit}',
+      }),
+    search: Joi.string().trim().allow('').optional().messages({
+      'string.base': 'Search query must be a string',
+    }),
+    region: Joi.string().trim().optional().messages({
+      'string.base': 'Region must be a string',
+    }),
+    type: Joi.string().trim().optional().messages({
+      'string.base': 'Type must be a string',
+    }),
     sortBy: Joi.string()
-      .valid(...LOCATION_SORT_FIELDS)
-      .default('createdAt'),
+      .valid(...Object.values(LOCATION_SORT_FIELDS))
+      .default(DEFAULT_LOCATION_SORT_FIELD)
+      .messages({
+        'string.base': 'Sort field must be a string',
+        'any.only': `Sort field must be one of: ${Object.values(LOCATION_SORT_FIELDS).join(', ')}`,
+      }),
     sortOrder: Joi.string()
-      .valid(...SORT_ORDER)
-      .default('desc'),
+      .valid(...Object.values(SORT_ORDERS))
+      .default(DEFAULT_SORT_ORDER)
+      .messages({
+        'string.base': 'Sort order must be a string',
+        'any.only': `Sort order must be one of: ${Object.values(SORT_ORDERS).join(', ')}`,
+      }),
   }).unknown(false),
 };
 
@@ -56,7 +81,7 @@ export const createLocationValidation = {
         'string.trim': 'Name cannot contain leading or trailing spaces',
         'any.required': 'Name is required',
       }),
-    type: Joi.string()
+    locationType: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .required()
       .trim()
