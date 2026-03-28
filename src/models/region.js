@@ -30,4 +30,4 @@ const regionSchema = new Schema(
   },
 );
 
-export const Region = model('Region', regionSchema);
+export const Region = model('Region', regionSchema, 'regions');
