@@ -42,6 +42,31 @@ export const locationIdValidator = {
   }),
 };
 
+export const createLocationValidation = {
+  [Segments.BODY]: Joi.object({
+    name: Joi.string()
+      .min(LOCATION_VALIDATION.nameMinLength)
+      .max(LOCATION_VALIDATION.nameMaxLength)
+      .trim()
+      .required(),
+
+    type: Joi.string()
+      .max(LOCATION_VALIDATION.locationTypeMaxLength)
+      .trim()
+      .required(),
+
+    region: Joi.string()
+      .max(LOCATION_VALIDATION.regionMaxLength)
+      .trim()
+      .required(),
+
+    description: Joi.string()
+      .min(LOCATION_VALIDATION.descriptionMinLength)
+      .max(LOCATION_VALIDATION.descriptionMaxLength)
+      .required(),
+  }).unknown(false),
+};
+
 export const updateLocationSchema = {
   [Segments.PARAMS]: Joi.object({
     locationId: Joi.string().custom(objectIdValidator).required(),
