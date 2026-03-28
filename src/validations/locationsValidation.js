@@ -143,8 +143,7 @@ export const updateLocationValidation = {
         'string.empty': 'Name cannot be empty',
         'string.trim': 'Name cannot contain leading or trailing spaces',
       }),
-
-    type: Joi.string()
+    locationType: Joi.string()
       .max(LOCATION_VALIDATION.locationTypeMaxLength)
       .trim()
       .messages({
@@ -155,7 +154,6 @@ export const updateLocationValidation = {
         'string.trim':
           'Location type cannot contain leading or trailing spaces',
       }),
-
     region: Joi.string()
       .max(LOCATION_VALIDATION.regionMaxLength)
       .trim()
@@ -165,7 +163,6 @@ export const updateLocationValidation = {
         'string.empty': 'Region cannot be empty',
         'string.trim': 'Region cannot contain leading or trailing spaces',
       }),
-
     description: Joi.string()
       .min(LOCATION_VALIDATION.descriptionMinLength)
       .max(LOCATION_VALIDATION.descriptionMaxLength)
@@ -176,19 +173,5 @@ export const updateLocationValidation = {
         'string.empty': 'Description cannot be empty',
         'string.trim': 'Description cannot contain leading or trailing spaces',
       }),
-
-    locationType: Joi.string()
-      .max(LOCATION_VALIDATION.locationTypeMaxLength)
-      .messages({
-        'string.base': 'Location-Type must be a string',
-        'string.min': 'Location-Type must be at least {#limit} characters long',
-        'string.max':
-          'Location-Type must be less than {#limit} characters long',
-        'string.empty': 'Location-Type cannot be empty',
-        'string.trim':
-          'Location-Type cannot contain leading or trailing spaces',
-      }),
-  })
-    .min(1)
-    .unknown(false),
+  }).unknown(false),
 };
