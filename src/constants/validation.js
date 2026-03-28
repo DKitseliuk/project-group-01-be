@@ -29,9 +29,26 @@ const FEEDBACK_VALIDATION = {
   descriptionMaxLength: 200,
 };
 
+
+
+const SORT_ORDER = ['asc', 'desc'];
+
+const LOCATION_SORT_FIELDS = [
+  'name',
+  'region',
+  'locationType',
+  'rate',
+  'createdAt',
+  'updatedAt',
+];
+
 export {
   USER_VALIDATION,
   LOCATION_VALIDATION,
   FEEDBACK_VALIDATION,
   REGION_LEVEL,
+  SORT_ORDER,
+  LOCATION_SORT_FIELDS,
+
+
 };
