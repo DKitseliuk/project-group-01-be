@@ -3,7 +3,12 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 
-import { createSession, deleteSession, findSession, setSessionCookies } from '../services/authService.js';
+import {
+  createSession,
+  deleteSession,
+  findSession,
+  setSessionCookies,
+} from '../services/authService.js';
 import userService from '../services/userService.js';
 
 export const registerUser = async (req, res) => {
@@ -19,7 +24,7 @@ export const registerUser = async (req, res) => {
   const newUser = await userService.createUser({
     name,
     email,
-    password: hashedPassword
+    password: hashedPassword,
   });
 
   const newSession = await createSession(newUser._id);
@@ -32,7 +37,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-const user = await userService.getUserByEmail(email);
+  const user = await userService.getUserByEmail(email);
   if (!user) {
     throw createHttpError(401, 'Invalid credentials');
   }
@@ -94,4 +99,3 @@ export const refreshUserSession = async (req, res) => {
     message: 'Session refreshed',
   });
 };
-

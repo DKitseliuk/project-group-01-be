@@ -5,7 +5,6 @@ const getAllRegions = () => {
   return Region.find();
 };
 
-
 const getAllLocationTypes = () => {
   return LocationType.find();
 };

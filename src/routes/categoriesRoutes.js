@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { getAllRegions, getAllLocationTypes} from '../controllers/categoriesController.js';
+import {
+  getAllRegions,
+  getAllLocationTypes,
+} from '../controllers/categoriesController.js';
 
 const router = Router();
 

@@ -1,6 +1,7 @@
 import { Joi, Segments } from 'celebrate';
 import { FEEDBACK_PAGINATION } from '../constants/pagination.js';
 import { locationIdValidator } from './locationsValidation.js';
+import { FEEDBACK_VALIDATION } from '../constants/validation.js';
 
 const feedbackListQuerySchema = Joi.object({
   page: Joi.number()
@@ -21,9 +22,6 @@ const feedbackListQuerySchema = Joi.object({
       'number.min': 'PerPage must be at least {#limit}',
       'number.max': 'PerPage must be at most {#limit}',
     }),
-  // Optional sort was out of original task scope; kept for potential future use:
-  // sortBy: Joi.string().valid('createdAt', 'rate'),
-  // sortOrder: Joi.string().valid('asc', 'desc'),
 });
 
 export const getFeedbacksByLocationSchema = {
@@ -39,8 +37,8 @@ export const createFeedbackSchema = {
   ...locationIdValidator,
   [Segments.BODY]: Joi.object({
     rate: Joi.number()
-      .min(1)
-      .max(5)
+      .min(FEEDBACK_VALIDATION.rateMin)
+      .max(FEEDBACK_VALIDATION.rateMax)
       .required()
       .messages({
         'number.base': 'Rate must be a number',
@@ -50,8 +48,8 @@ export const createFeedbackSchema = {
       }),
     description: Joi.string()
       .trim()
-      .min(1)
-      .max(200)
+      .min(FEEDBACK_VALIDATION.descriptionMinLength)
+      .max(FEEDBACK_VALIDATION.descriptionMaxLength)
       .required()
       .messages({
         'string.base': 'Description must be a string',

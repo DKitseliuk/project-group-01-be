@@ -29,9 +29,9 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(authRoutes);
-app.use(feedbackRoutes);
 app.use(userRoutes);
 app.use(locationsRoutes);
+app.use(feedbackRoutes);
 app.use(categoriesRoutes);
 
 //Middleware - 404 - Route not found
