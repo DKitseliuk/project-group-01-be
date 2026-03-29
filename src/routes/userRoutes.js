@@ -13,6 +13,7 @@ import { celebrate } from 'celebrate';
 import {
   getUserByIdSchema,
   getUserLocationsSchema,
+  updateUserSchema,
 } from '../validations/userValidation.js';
 
 const userRoutes = Router();
@@ -22,6 +23,7 @@ userRoutes.patch(
   '/api/users/me/edit',
   authenticate,
   upload.single('avatarUrl'),
+  celebrate(updateUserSchema, { abortEarly: false }),
   updateUser,
 );
 

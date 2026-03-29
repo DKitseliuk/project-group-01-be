@@ -12,4 +12,8 @@ const locationTypeSchema = new Schema(
   },
 );
 
-export const LocationType = model('LocationType', locationTypeSchema, 'location_types');
+export const LocationType = model(
+  'LocationType',
+  locationTypeSchema,
+  'location_types',
+);

@@ -4,6 +4,7 @@ import locationsService from '../services/locationsService.js';
 import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
 import { getPagination } from '../helpers/pagination.js';
 import { FOLDERS } from '../constants/cloudinary.js';
+import userService from '../services/userService.js';
 
 export const getAllLocations = async (req, res) => {
   const { search, region, type, sortBy, sortOrder } = req.query;
@@ -62,7 +63,8 @@ export const getLocationById = async (req, res) => {
 };
 
 export const createLocation = async (req, res) => {
-  const payload = { ...req.body, ownerId: req.user._id };
+  const ownerId = req.user._id;
+  const payload = { ...req.body, ownerId };
 
   if (req.file) {
     const result = await saveFileToCloudinary(req.file.buffer, {
@@ -75,6 +77,12 @@ export const createLocation = async (req, res) => {
   }
 
   const location = await locationsService.createLocation(payload);
+
+  const articlesAmount = await locationsService.getAllLocationsCount({
+    ownerId,
+  });
+
+  await userService.updateUser(ownerId, { articlesAmount });
 
   res.status(201).json({ location });
 };
