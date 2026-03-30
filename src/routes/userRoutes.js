@@ -2,20 +2,31 @@
 
 import { Router } from 'express';
 import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/multer.js';
 import {
   getCurrentUser,
   getUser,
   getUserLocations,
+  updateUser,
 } from '../controllers/userController.js';
 import { celebrate } from 'celebrate';
 import {
   getUserByIdSchema,
   getUserLocationsSchema,
+  updateUserSchema,
 } from '../validations/userValidation.js';
 
 const userRoutes = Router();
 
 userRoutes.get('/api/users/me', authenticate, getCurrentUser);
+userRoutes.patch(
+  '/api/users/me/edit',
+  authenticate,
+  upload.single('avatarUrl'),
+  celebrate(updateUserSchema, { abortEarly: false }),
+  updateUser,
+);
+
 userRoutes.get(
   '/api/users/:userId',
   celebrate(getUserByIdSchema, { abortEarly: false }),

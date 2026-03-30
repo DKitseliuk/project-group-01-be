@@ -1,6 +1,5 @@
 import categoriesService from '../services/categoriesService.js';
 
-
 export const getAllRegions = async (req, res) => {
   const regions = await categoriesService.getAllRegions();
 

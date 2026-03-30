@@ -1,24 +1,23 @@
 //  src/middleware/errorHandler.js
 
-import { HttpError } from "http-errors";
-import { getEnvVar } from "../helpers/getEnvVar.js";
-import { ENV_VARS } from "../constants/envVars.js";
+import { isHttpError } from 'http-errors';
+import { getEnvVar } from '../helpers/getEnvVar.js';
+import { ENV_VARS } from '../constants/envVars.js';
 
-export const errorHandler = (err, req, res, _next) => {
-  console.log("Error Middleware:", err);
+export const errorHandler = (err, _req, res, _next) => {
+  const isProd = getEnvVar(ENV_VARS.NODE_ENV) === 'production';
 
+  console.log('Error Middleware:', isProd ? err.message : err);
 
-  if (err instanceof HttpError) {
+  if (isHttpError(err)) {
     return res.status(err.status).json({
       message: err.message || err.name,
     });
   }
 
-  const isProd = getEnvVar(ENV_VARS.NODE_ENV) === "production";
-
   return res.status(500).json({
     message: isProd
-      ? "Something went wrong. Please try again later."
+      ? 'Something went wrong. Please try again later.'
       : err.message,
   });
 };

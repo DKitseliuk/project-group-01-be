@@ -3,6 +3,8 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import locationsService from '../services/locationsService.js';
 import { LOCATIONS_PAGINATION } from '../constants/pagination.js';
 import { getPagination } from '../helpers/pagination.js';
+import { FOLDERS } from '../constants/cloudinary.js';
+import userService from '../services/userService.js';
 
 export const getAllLocations = async (req, res) => {
   const { search, region, type, sortBy, sortOrder } = req.query;
@@ -15,7 +17,10 @@ export const getAllLocations = async (req, res) => {
   const filter = {};
 
   if (search) {
-    filter.name = { $regex: search, $options: 'i' };
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } },
+    ];
   }
 
   if (region) {
@@ -59,10 +64,14 @@ export const getLocationById = async (req, res) => {
 };
 
 export const createLocation = async (req, res) => {
-  const payload = { ...req.body, ownerId: req.user._id };
+  const ownerId = req.user._id;
+  const payload = { ...req.body, ownerId };
 
   if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
+    const result = await saveFileToCloudinary(req.file.buffer, {
+      folder: FOLDERS.locations,
+      name: `location_${Date.now()}`,
+    });
     payload.image = result.secure_url;
   } else {
     throw createHttpError(400, 'No file');
@@ -70,18 +79,38 @@ export const createLocation = async (req, res) => {
 
   const location = await locationsService.createLocation(payload);
 
+  const articlesAmount = await locationsService.getAllLocationsCount({
+    ownerId,
+  });
+
+  await userService.updateUser(ownerId, { articlesAmount });
+
   res.status(201).json({ location });
 };
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
-  if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
-    req.body.image = result.secure_url;
+  const filter = {
+    _id: locationId,
+    ownerId: req.user._id,
+  };
+
+  const payload = { ...req.body };
+
+  if (Object.keys(payload).length === 0 && !req.file) {
+    throw createHttpError(400, 'Must be at least one change');
   }
 
-  const location = await locationsService.updateLocation(req, locationId);
+  if (req.file) {
+    const result = await saveFileToCloudinary(req.file.buffer, {
+      folder: FOLDERS.locations,
+      name: `location_${locationId}`,
+    });
+    payload.image = result.secure_url;
+  }
+
+  const location = await locationsService.updateLocation(filter, payload);
 
   if (!location) {
     throw createHttpError(404, 'Location not found');

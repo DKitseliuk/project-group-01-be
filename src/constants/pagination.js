@@ -7,6 +7,7 @@ const USER_LOCATIONS_PAGINATION = {
   maxPerPage: 18,
 };
 
+<<<<<<< HEAD
 const LOCATIONS_PAGINATION = {
   minPage: 1,
   defaultPage: 1,
@@ -16,3 +17,22 @@ const LOCATIONS_PAGINATION = {
 };
 
 export { USER_LOCATIONS_PAGINATION, LOCATIONS_PAGINATION };
+=======
+const FEEDBACK_PAGINATION = {
+  minPage: 1,
+  defaultPage: 1,
+  minPerPage: 1,
+  defaultPerPage: 3,
+  maxPerPage: 10,
+};
+
+const LOCATIONS_PAGINATION = {
+  minPage: 1,
+  defaultPage: 1,
+  minPerPage: 3,
+  defaultPerPage: 9,
+  maxPerPage: 24,
+};
+
+export { USER_LOCATIONS_PAGINATION, FEEDBACK_PAGINATION, LOCATIONS_PAGINATION };
+>>>>>>> main

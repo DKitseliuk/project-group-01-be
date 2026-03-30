@@ -1,24 +1,101 @@
+import createHttpError from 'http-errors';
 import * as feedbackService from '../services/feedbackService.js';
+import locationsService from '../services/locationsService.js';
+import { FEEDBACK_PAGINATION } from '../constants/pagination.js';
+import { getPagination } from '../helpers/pagination.js';
+import {
+  DEFAULT_FEEDBACK_SORT_FIELD,
+  DEFAULT_SORT_ORDER,
+} from '../constants/sort.js';
 
-export const getFeedbacks = async (req, res) => {
-  const { locationId, page, perPage, sortBy, sortOrder } = req.query;
+const normalizeFeedbackIdRefs = (feedbacksId) =>
+  (feedbacksId || []).map((ref) => (ref && ref._id ? ref._id : ref));
 
-  const data = await feedbackService.getFeedbacksByLocation(locationId, {
+const DEFAULT_FEEDBACK_SORT = {
+  [DEFAULT_FEEDBACK_SORT_FIELD]: DEFAULT_SORT_ORDER,
+};
+
+export const getLocationFeedbacks = async (req, res) => {
+  const { locationId } = req.params;
+  const { page, perPage, skip, limit } = getPagination(
+    req.query,
+    FEEDBACK_PAGINATION,
+  );
+
+  const location = await locationsService.getLocationById(locationId);
+  if (!location) {
+    throw createHttpError(404, 'Location not found');
+  }
+  const feedbacksIdRefs = normalizeFeedbackIdRefs(location.feedbacksId);
+  const filter = { _id: { $in: feedbacksIdRefs } };
+
+  const [feedbacks, totalFeedbacks] = await Promise.all([
+    feedbackService.findFeedbacks({
+      filter,
+      sort: DEFAULT_FEEDBACK_SORT,
+      skip,
+      limit,
+    }),
+    feedbackService.countFeedbacks({ filter }),
+  ]);
+
+  const totalPages = Math.ceil(totalFeedbacks / perPage);
+
+  res.status(200).json({
     page,
     perPage,
-    sortBy,
-    sortOrder,
+    totalPages,
+    totalFeedbacks,
+    feedbacks,
   });
+};
 
-  res.status(200).json(data);
+export const getAllFeedbacks = async (req, res) => {
+  const { page, perPage, skip, limit } = getPagination(
+    req.query,
+    FEEDBACK_PAGINATION,
+  );
+
+  const filter = {};
+
+  const [feedbacks, totalFeedbacks] = await Promise.all([
+    feedbackService.findFeedbacks({
+      filter,
+      sort: DEFAULT_FEEDBACK_SORT,
+      skip,
+      limit,
+    }),
+    feedbackService.countFeedbacks({ filter }),
+  ]);
+
+  const totalPages = Math.ceil(totalFeedbacks / perPage);
+
+  res.status(200).json({
+    page,
+    perPage,
+    totalPages,
+    totalFeedbacks,
+    feedbacks,
+  });
 };
 
 export const createFeedback = async (req, res) => {
-  const feedback = await feedbackService.createFeedback(req.user, {
-    locationId: req.query.locationId,
+  const { locationId } = req.params;
+  const location = await locationsService.getLocationById(locationId);
+  if (!location) {
+    throw createHttpError(404, 'Location not found');
+  }
+
+  const payload = {
     rate: req.body.rate,
     description: req.body.description,
-  });
+    userName: req.user.name,
+  };
+
+  const feedback = await feedbackService.createFeedback(payload);
+
+  await locationsService.pushFeedbackId(locationId, feedback._id);
+  await locationsService.updateLocationAverageRate(locationId);
 
   res.status(201).json(feedback);
 };

@@ -11,8 +11,8 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import locationsRoutes from "./routes/locationsRoutes.js";
-import categoriesRoutes from "./routes/categoriesRoures.js";
+import locationsRoutes from './routes/locationsRoutes.js';
+import categoriesRoutes from './routes/categoriesRoutes.js';
 
 const app = express();
 
@@ -28,16 +28,11 @@ app.use(cors());
 //Middleware - Cookies parser
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'OK' });
-});
-
 app.use(authRoutes);
-app.use(feedbackRoutes);
 app.use(userRoutes);
 app.use(locationsRoutes);
+app.use(feedbackRoutes);
 app.use(categoriesRoutes);
-
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);
