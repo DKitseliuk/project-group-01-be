@@ -31,7 +31,9 @@ export const registerUser = async (req, res) => {
 
   setSessionCookies(res, newSession);
 
-  res.status(201).json({ newUser });
+  const { password: _userPassword, ...userData } = newUser.toObject();
+
+  res.status(201).json(userData);
 };
 
 export const loginUser = async (req, res) => {
@@ -53,7 +55,9 @@ export const loginUser = async (req, res) => {
 
   setSessionCookies(res, newSession);
 
-  res.status(200).json({ user });
+  const { password: _userPassword, ...userData } = user.toObject();
+
+  res.status(200).json(userData);
 };
 
 export const logoutUser = async (req, res) => {
