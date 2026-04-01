@@ -84,7 +84,7 @@ export const createLocation = async (req, res) => {
 
   await userService.updateUser(ownerId, { articlesAmount });
 
-  res.status(201).json({ location });
+  res.status(201).json(location);
 };
 
 export const updateLocation = async (req, res) => {
@@ -115,5 +115,5 @@ export const updateLocation = async (req, res) => {
     throw createHttpError(404, 'Location not found');
   }
 
-  res.status(200).json({ location });
+  res.status(200).json(location);
 };
