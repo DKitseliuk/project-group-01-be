@@ -13,12 +13,12 @@ import {
   loginUserSchema,
 } from '../validations/authValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
+import { authenticateRefresh } from '../middleware/authenticateRefresh.js';
 const router = Router();
 
 router.post('/api/auth/register', celebrate(registerUserSchema), registerUser);
 router.post('/api/auth/login', celebrate(loginUserSchema), loginUser);
 router.post('/api/auth/logout', authenticate, logoutUser);
-router.post('/api/auth/refresh', authenticate, refreshUserSession);
-//router.post('/api/auth/request-reset-email', celebrate(requestResetEmailSchema), requestResetEmail);
-//router.post('/api/auth/reset-password', celebrate(resetPasswordSchema), resetPassword);
+router.post('/api/auth/refresh', authenticateRefresh, refreshUserSession);
+
 export default router;
