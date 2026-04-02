@@ -40,7 +40,7 @@ export const setSessionCookies = (res, session) => {
     maxAge: ONE_DAY,
   });
 
-  res.cookie('sessionId', session._id, {
+  res.cookie('sessionId', session._id.toString(), {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
