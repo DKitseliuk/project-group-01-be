@@ -7,10 +7,10 @@ import { FOLDERS } from '../constants/cloudinary.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import createHttpError from 'http-errors';
 
-const getCurrentUser = (req, res) => {
-  const user = req.user;
-
-  res.status(200).json({ user });
+const getCurrentUser = async (req, res) => {
+  const user = await userService.getUserById(req.user._id);
+  const { password, ...userData } = user.toObject();
+  res.status(200).json(userData);
 };
 
 const getUser = async (req, res) => {
@@ -18,7 +18,8 @@ const getUser = async (req, res) => {
 
   const user = await userService.getUserById(userId);
 
-  res.status(200).json({ user });
+  const { password, ...userData } = user.toObject();
+  res.status(200).json(userData);
 };
 
 export const updateUser = async (req, res) => {
@@ -39,7 +40,8 @@ export const updateUser = async (req, res) => {
 
   const user = await userService.updateUser(userId, payload);
 
-  res.status(200).json({ user });
+  const { password, ...userData } = user.toObject();
+  res.status(200).json(userData);
 };
 
 const getUserLocations = async (req, res) => {
