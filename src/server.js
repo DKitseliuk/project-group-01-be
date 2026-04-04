@@ -34,11 +34,11 @@ app.use(locationsRoutes);
 app.use(feedbackRoutes);
 app.use(categoriesRoutes);
 
-//Middleware - 404 - Route not found
-app.use(notFoundHandler);
-
 //Middleware - Celebrate error catching
 app.use(errors());
+
+//Middleware - 404 - Route not found
+app.use(notFoundHandler);
 
 //Middleware - Error catching
 app.use(errorHandler);
