@@ -51,16 +51,14 @@ const getUserLocations = async (req, res) => {
     USER_LOCATIONS_PAGINATION,
   );
 
-  const [userLocations, totalUserLocations] = await Promise.all([
+  const [locations, totalItems] = await Promise.all([
     userService.getUserLocations(userId, skip, limit),
     userService.getUserLocationsCount(userId),
   ]);
 
-  const totalPages = Math.ceil(totalUserLocations / perPage);
+  const totalPages = Math.ceil(totalItems / perPage);
 
-  res
-    .status(200)
-    .json({ page, perPage, totalPages, totalUserLocations, userLocations });
+  res.status(200).json({ page, perPage, totalItems, totalPages, locations });
 };
 
 export { getCurrentUser, getUser, getUserLocations };
