@@ -9,6 +9,11 @@ import createHttpError from 'http-errors';
 
 const getCurrentUser = async (req, res) => {
   const user = await userService.getUserById(req.user._id);
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
   const { password, ...userData } = user.toObject();
   res.status(200).json(userData);
 };
@@ -18,11 +23,15 @@ const getUser = async (req, res) => {
 
   const user = await userService.getUserById(userId);
 
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
   const { password, ...userData } = user.toObject();
   res.status(200).json(userData);
 };
 
-export const updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   if (!req.file && !req.body?.name) {
     throw createHttpError(400, 'No new avatar or new name');
   }
@@ -39,6 +48,10 @@ export const updateUser = async (req, res) => {
   }
 
   const user = await userService.updateUser(userId, payload);
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
 
   const { password, ...userData } = user.toObject();
   res.status(200).json(userData);
@@ -61,4 +74,4 @@ const getUserLocations = async (req, res) => {
   res.status(200).json({ page, perPage, totalItems, totalPages, locations });
 };
 
-export { getCurrentUser, getUser, getUserLocations };
+export { getCurrentUser, getUser, getUserLocations, updateUser };
