@@ -118,6 +118,20 @@ export const createLocationValidation = {
         'string.trim': 'Description cannot contain leading or trailing spaces',
         'any.required': 'Description is required',
       }),
+    coordinates: Joi.object({
+      lat: Joi.number().required().messages({
+        'number.base': 'Lat must be a number',
+        'any.required': 'Lat is required',
+      }),
+      lon: Joi.number().required().messages({
+        'number.base': 'Lon must be a number',
+        'any.required': 'Lon is required',
+      }),
+    })
+      .optional()
+      .messages({
+        'object.base': 'Coordinates must be an object',
+      }),
   }).unknown(false),
 };
 
@@ -172,6 +186,20 @@ export const updateLocationValidation = {
         'string.max': 'Description must be less than {#limit} characters long',
         'string.empty': 'Description cannot be empty',
         'string.trim': 'Description cannot contain leading or trailing spaces',
+      }),
+    coordinates: Joi.object({
+      lat: Joi.number().required().messages({
+        'number.base': 'Lat must be a number',
+        'any.required': 'Lat is required',
+      }),
+      lon: Joi.number().required().messages({
+        'number.base': 'Lon must be a number',
+        'any.required': 'Lon is required',
+      }),
+    })
+      .optional()
+      .messages({
+        'object.base': 'Coordinates must be an object',
       }),
   }).unknown(false),
 };
