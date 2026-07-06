@@ -9,7 +9,7 @@ import { getEnvVar } from "./helpers/getEnvVar.js";
 import { ENV_VARS } from "./constants/envVars.js";
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
-
+import locationsRoutes from "./routes/locationsRoutes.js";
 const app = express();
 
 app.use(logger);
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(authRoutes);
-
+app.use(locationsRoutes);
 
 app.use(notFoundHandler);
 

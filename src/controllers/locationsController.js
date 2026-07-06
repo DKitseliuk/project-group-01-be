@@ -1,15 +1,15 @@
-import Location from '../models/location.js';
+import { Location } from '../models/location.js';
 import createHttpError from 'http-errors';
-import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+// import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const updateLocation = async (req, res) => {
   const { locationId } = req.params;
 
 
-  if (req.file) {
-    const result = await saveFileToCloudinary(req.file.buffer);
-    req.body.image = result.secure_url;
-  }
+  // if (req.file) {
+  //   const result = await saveFileToCloudinary(req.file.buffer);
+  //   req.body.image = result.secure_url;
+  // }
 
   const location = await Location.findOneAndUpdate(
     { _id: locationId, ownerId: req.user._id },
